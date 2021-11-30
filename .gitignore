@@ -1,0 +1,16 @@
+node_modules/
+
+*.sqlite3
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
