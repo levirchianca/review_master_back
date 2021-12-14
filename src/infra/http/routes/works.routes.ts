@@ -5,8 +5,12 @@ const worksController = new WorksController();
 
 const WorkRoutes = Router();
 
-WorkRoutes.get('/', worksController.index);
+WorkRoutes.route('/')
+  .get(worksController.index)
+  .post(worksController.create);
 
-WorkRoutes.get('/:id', worksController.show);
+WorkRoutes.route('/:id')
+  .get(worksController.show)
+  .put(worksController.update);
 
 export default WorkRoutes;

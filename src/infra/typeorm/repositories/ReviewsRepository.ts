@@ -34,6 +34,10 @@ class ReviewsRepository implements IReviewRepository {
 
     return review;
   }
+
+  public async delete(id: number): Promise<void> {
+    await this.ormRepository.delete({ id });
+  }
 }
 
 export default ReviewsRepository;

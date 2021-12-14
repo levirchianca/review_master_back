@@ -5,4 +5,5 @@ import Review from "src/models/Review";
 export default interface IReviewRepository {
   findByWork(data: IListReviewsDTO): Promise<IListReviewsResponseDTO>;
   create(data: ICreateReviewDTO): Promise<Review>;
+  delete(id: number): Promise<void>;
 }

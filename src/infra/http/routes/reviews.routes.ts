@@ -9,4 +9,6 @@ reviewRoutes.route('/')
   .get(reviewsController.index)
   .post(reviewsController.create);
 
+reviewRoutes.delete('/:id', reviewsController.delete);
+
 export default reviewRoutes;

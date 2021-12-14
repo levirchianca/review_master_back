@@ -1,6 +1,7 @@
 import { getRepository, Repository } from 'typeorm';
 import IWorksRepository from "src/repositories/IWorksRepository";
 import { IListWorksDTO, IListWorksResponseDTO } from "src/dtos/IListWorksDTO";
+import ICreateWorkDTO from 'src/dtos/ICreateWorkDTO';
 
 import Work from "src/models/Work";
 
@@ -45,6 +46,18 @@ class WorksRepository implements IWorksRepository {
     });
 
     return work;
+  }
+
+  public async create(data: ICreateWorkDTO): Promise<Work> {
+    const work = await this.ormRepository.create(data);
+
+    await this.ormRepository.save(work);
+
+    return work;
+  }
+
+  public async save(work: Work): Promise<Work> {
+    return await this.ormRepository.save(work);
   }
 }
 

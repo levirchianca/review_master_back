@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import ListReviewsService from 'src/services/ListReviewsService';
 import CreateReviewService from 'src/services/CreateReviewService';
+import DeleteReviewService from 'src/services/DeleteReviewService';
 
 class ReviewsController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -41,6 +42,16 @@ class ReviewsController {
     });
 
     return response.json(review);
+  }
+
+  async delete(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+
+    const deleteReview = container.resolve(DeleteReviewService);
+
+    await deleteReview.execute(Number(id));
+
+    return response.sendStatus(204);
   }
 }
 
