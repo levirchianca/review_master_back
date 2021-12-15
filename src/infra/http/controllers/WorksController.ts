@@ -24,7 +24,7 @@ class WorksController {
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
-    const { gender, name, page = 1, limit = 15 } = request.query;
+    const { gender, name, order_by, page = 1, limit = 15 } = request.query;
 
     const listWork = container.resolve(ListWorksService);
 
@@ -33,6 +33,7 @@ class WorksController {
       name: name as string,
       page: Number(page),
       limit: Number(limit),
+      order_by: order_by as string
     });
 
     response.header("X-Total-Count", String(totalCount));

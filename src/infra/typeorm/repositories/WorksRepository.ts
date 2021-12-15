@@ -17,19 +17,32 @@ class WorksRepository implements IWorksRepository {
     const limit = data.limit || 15;
 
     const qb = this.ormRepository.createQueryBuilder('works');
-
+      
     // Add filtros
     if (data.gender) {
-      qb.andWhere(`gender = '${data.gender}'`);
+      qb.andWhere(`works.gender = '${data.gender}'`);
     }
 
     if (data.name) {
-      qb.andWhere(`name LIKE '%${data.name}%'`);
+      qb.andWhere(`works.name LIKE '%${data.name}%'`);
     }
 
-    // TODO: Ordenar por nota e por quantidade de reviews
+    // Ordenar por nota e por quantidade de reviews
+    if (data.order_by) {
+      qb.leftJoin('reviews', 'reviews', 'reviews.work_id = works.id');
 
-    // Ordenação
+      qb.addGroupBy('reviews.work_id');
+
+      if (data.order_by == 'popularity') {
+        qb.addSelect(['COUNT(*) as reviews_count'])
+        qb.orderBy('reviews_count', 'DESC')
+      } else {
+        qb.addSelect(['AVG(reviews.note) as reviews_mean'])
+        qb.orderBy('reviews_mean', 'DESC')
+      }
+    }
+
+    // Paginação
     const totalCount = await qb.getCount();
 
     const works = await qb

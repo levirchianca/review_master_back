@@ -5,6 +5,7 @@ export interface IListWorksDTO {
   name?: string;
   page?: number;
   limit?: number;
+  order_by?: string;
 }
 
 export interface IListWorksResponseDTO {
