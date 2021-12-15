@@ -22,6 +22,7 @@ class ReviewsRepository implements IReviewRepository {
     const reviews = await qb
       .skip((data.page - 1) * data.limit)
       .take(data.limit)
+      .orderBy('created_at', 'DESC')
       .getMany();
 
     return {reviews, totalCount};
