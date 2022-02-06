@@ -1,14 +1,13 @@
-import { Router } from 'express';
-import ReviewsController from '../controllers/ReviewsController';
+import { Router } from "express";
+import FriendlyReviewsController from "../controllers/PostController";
 
 const reviewRoutes = Router();
 
-const reviewsController = new ReviewsController();
+const reviewsController = FriendlyReviewsController;
 
-reviewRoutes.route('/')
+reviewRoutes
+  .route("/")
   .get(reviewsController.index)
   .post(reviewsController.create);
-
-reviewRoutes.delete('/:id', reviewsController.delete);
 
 export default reviewRoutes;
