@@ -1,16 +1,19 @@
 import { InteractionDAO } from "friend_of_all/DAO";
+import Review from "src/models/Review";
 import { Interaction } from "friend_of_all/domain";
 import { Repository, getRepository } from "typeorm";
+import { IReview, ReviewSchema } from "src/models/ReviewModel";
 
 class InteractionDAOImpl implements InteractionDAO {
-  private ormRepository: Repository<Interaction>;
+  private ormRepository: Repository<IReview>;
 
   constructor() {
-    this.ormRepository = getRepository(Interaction);
+    this.ormRepository = getRepository<IReview>(ReviewSchema);
   }
 
-  create(interaction: Interaction): Promise<Interaction> {
-    const interactionToCreate = this.ormRepository.create(interaction);
+  create(review: IReview): Promise<Interaction> {
+    const interactionToCreate = this.ormRepository.create(review);
+
     return this.ormRepository.save(interactionToCreate);
   }
 
@@ -27,4 +30,4 @@ class InteractionDAOImpl implements InteractionDAO {
   }
 }
 
-export default new InteractionDAOImpl();
+export default InteractionDAOImpl;

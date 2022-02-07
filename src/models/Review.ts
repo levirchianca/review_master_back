@@ -1,8 +1,9 @@
+import { Interaction } from 'friend_of_all/domain';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import Work from './Work';
+import Work from './WorkModel';
 
 @Entity('reviews')
-class Review {
+class Review extends Interaction {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,9 +25,9 @@ class Review {
   @Column('int')
   work_id: number;
 
-  @ManyToOne(() => Work)
-  @JoinColumn({ name: 'work_id' })
-  work: Work;
+  // @ManyToOne(() => Work)
+  // @JoinColumn({ name: 'work_id' })
+  // work: Work;
 }
 
 export default Review;

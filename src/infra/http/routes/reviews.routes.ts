@@ -1,9 +1,10 @@
 import { Router } from "express";
-import FriendlyReviewsController from "../controllers/PostController";
+// import FriendlyReviewsController from "../controllers/PostController";
+import FriendlyInterationsController from "../controllers/InterationController";
 
 const reviewRoutes = Router();
 
-const reviewsController = FriendlyReviewsController;
+const reviewsController = FriendlyInterationsController;
 
 reviewRoutes
   .route("/")

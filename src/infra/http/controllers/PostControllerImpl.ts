@@ -5,7 +5,7 @@ import PostDAOImpl from "src/infra/typeorm/repositories/PostDAOImpl";
 class PostControllerImpl extends PostController {
   protected async list(title?: string, description?: string): Promise<Post[]> {
     try {
-      return PostDAOImpl.list(title, description);
+      return await new PostDAOImpl().list(title, description);
     } catch (error) {
       throw new Error("Failed to obtain posts");
     }

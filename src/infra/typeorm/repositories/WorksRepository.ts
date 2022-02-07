@@ -3,7 +3,7 @@ import IWorksRepository from "src/repositories/IWorksRepository";
 import { IListWorksDTO, IListWorksResponseDTO } from "src/dtos/IListWorksDTO";
 import ICreateWorkDTO from 'src/dtos/ICreateWorkDTO';
 
-import Work from "src/models/Work";
+import Work from "src/models/Work_t";
 
 class WorksRepository implements IWorksRepository {
   private ormRepository: Repository<Work>;

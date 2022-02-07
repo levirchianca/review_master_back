@@ -1,44 +1,89 @@
+import { getRepository, Repository } from "typeorm";
 import { UserDAO } from "friend_of_all/DAO";
 import { User } from "friend_of_all/domain";
-import { Repository, getRepository } from "typeorm";
+import { IUser, UserEntity } from "../../../models/UserModel";
 
-class UserDAOImpl implements UserDAO {
-  private ormRepository: Repository<User>;
+class UserTypeOrmDAO implements UserDAO {
+  private ormRepository: Repository<IUser>;
 
-  constructor() {
-    this.ormRepository = getRepository(User);
+  constructor () {
+    this.ormRepository = getRepository<IUser>(UserEntity);
+  }
+  
+  async create(user: User): Promise<User> {
+    const { name, email, password } = user;
+
+    let userTypeOrm = this.ormRepository.create({
+      name,
+      email,
+      password
+    });
+
+    await this.ormRepository.save(userTypeOrm);
+
+    user.id = String(userTypeOrm.id);
+
+    return user;
   }
 
-  create(user: User): Promise<User> {
-    try {
-      const newUser = this.ormRepository.create(user);
-      return this.ormRepository.save(newUser);
-    } catch (e) {
-      console.error(e);
+  async get(email: String, password: String): Promise<User | undefined> {
+    const userTypeOrm = await this.ormRepository.findOne({
+      where: { email, password }
+    });
+
+    if (!userTypeOrm) {
+      return undefined;
     }
+
+    const user = new User(
+      userTypeOrm.email, 
+      userTypeOrm.password, 
+      userTypeOrm.name,
+      String(userTypeOrm.id)
+    );
+
+    return user;
   }
 
-  get(email: string, password: string): Promise<User>;
-  get(email: string): Promise<User>;
-  get(email: string, password?: string): Promise<User> {
-    try {
-      return this.ormRepository.findOne({
-        where: { email, password },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  async getByEmail(email: String): Promise<User | undefined> {
+    const userTypeOrm = await this.ormRepository.findOne({
+      where: { email }
+    });
 
-  getById(id: string): Promise<User | undefined> {
-    try {
-      return this.ormRepository.findOne({
-        where: { id },
-      });
-    } catch (e) {
-      console.error(e);
+    if (!userTypeOrm) {
+      return undefined;
     }
+
+    const user = new User(
+      userTypeOrm.email, 
+      userTypeOrm.password, 
+      userTypeOrm.name,
+      String(userTypeOrm.id)
+    );
+
+    return user;
+  }
+  
+  async getById(id: string): Promise<User> {
+    const parsedId = parseInt(id);
+
+    const userTypeOrm = await this.ormRepository.findOne({
+      where: { id: parsedId }
+    });
+
+    if (!userTypeOrm) {
+      return undefined;
+    }
+
+    const user = new User(
+      userTypeOrm.email, 
+      userTypeOrm.password, 
+      userTypeOrm.name,
+      String(userTypeOrm.id)
+    );
+
+    return user;
   }
 }
 
-export default new UserDAOImpl();
+export default UserTypeOrmDAO;

@@ -14,7 +14,7 @@ export class CreateWork1637883048785 implements MigrationInterface {
             isGenerated: true,
           },
           {
-            name: 'name',
+            name: 'title',
             type: 'varchar'
           },
           {
@@ -23,32 +23,9 @@ export class CreateWork1637883048785 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'published_at',
-            type: 'date'
-          },
-          {
             name: 'description',
             type: 'text'
           },
-          {
-            name: 'gender',
-            type: 'varchar'
-          },
-          {
-            name: 'platforms',
-            type: 'varchar',
-            isNullable: true
-          },
-          {
-            name: 'game_mode',
-            type: 'varchar',
-            isNullable: true
-          },
-          {
-            name: 'origin_country',
-            type: 'varchar',
-            isNullable: true
-          }
         ]
       }));
     }

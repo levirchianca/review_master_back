@@ -8,6 +8,9 @@ import DeleteReviewService from "src/services/DeleteReviewService";
 import { Post } from "friend_of_all/domain";
 
 import PostControllerImpl from "./PostControllerImpl";
+// import PostController from "friend_of_all/controllers/PostController";
+import PostDAOImpl from "../../typeorm/repositories/PostDAOImpl";
+import { Console } from "console";
 
 interface IRequest {
   id: string;
@@ -17,79 +20,78 @@ interface IRequest {
 }
 
 class FriendlyPostsController {
-  constructor() {}
 
-  async index(req: Request): Promise<Post[]> {
-    const { title, description, orderBy = " " } = req.body;
-    const postController = new PostControllerImpl(PostControllerImpl);
+  async index(req: Request, res: Response): Promise<Response> {
+    const { title, description, orderBy = " " } = req.query;
+    const postController = new PostControllerImpl(new PostDAOImpl());
 
     const post: Post[] = await postController.listPost(
-      title,
-      description,
-      orderBy
+      title as string,
+      description as string,
+      orderBy as string
     );
 
-    return post;
+    return res.json(post);
   }
 
-  public async create(data: IRequest): Promise<Response> {
+  public async create(req: Request, res: Response): Promise<Response> {
+    const { title, description } = req.body;
+
     const post = new Post(
-      data.id,
-      data.title,
-      data.description,
-      data.created_at
+      title,
+      description,
     );
 
-    const postController = new PostControllerImpl(PostControllerImpl);
+    const postController = new PostControllerImpl(new PostDAOImpl());
 
     const createdPost = await postController.createPost(post);
 
-    return createdPost;
+    return res.json(createdPost);
   }
 }
 
-class ReviewsController {
-  async index(request: Request, response: Response): Promise<Response> {
-    const { work_id, page = 1, limit = 15 } = request.query;
+// class ReviewsController {
+//   async index(request: Request, response: Response): Promise<Response> {
+//     const { work_id, page = 1, limit = 15 } = request.query;
 
-    const listReviews = container.resolve(ListReviewsService);
+//     const listReviews = container.resolve(ListReviewsService);
 
-    const { reviews, totalCount } = await listReviews.execute({
-      work_id: Number(work_id),
-      page: Number(page),
-      limit: Number(limit),
-    });
+//     const { reviews, totalCount } = await listReviews.execute({
+//       work_id: Number(work_id),
+//       page: Number(page),
+//       limit: Number(limit),
+//     });
 
-    response.header("X-Total-Count", String(totalCount));
+//     response.header("X-Total-Count", String(totalCount));
 
-    return response.json(reviews);
-  }
+//     return response.json(reviews);
+//   }
 
-  async create(request: Request, response: Response): Promise<Response> {
-    const { work_id, note, title, description, author } = request.body;
+//   async create(request: Request, response: Response): Promise<Response> {
+//     const { work_id, note, title, description, author } = request.body;
 
-    const createReview = container.resolve(CreateReviewService);
+//     const createReview = container.resolve(CreateReviewService);
 
-    const review = await createReview.execute({
-      work_id: Number(work_id),
-      author: author as string,
-      description: description as string,
-      note: note as string,
-      title: title as string,
-    });
+//     const review = await createReview.execute({
+//       work_id: Number(work_id),
+//       author: author as string,
+//       description: description as string,
+//       note: note as string,
+//       title: title as string,
+//     });
 
-    return response.json(review);
-  }
+//     return response.json(review);
+//   }
 
-  async delete(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+//   async delete(request: Request, response: Response): Promise<Response> {
+//     const { id } = request.params;
 
-    const deleteReview = container.resolve(DeleteReviewService);
+//     const deleteReview = container.resolve(DeleteReviewService);
 
-    await deleteReview.execute(Number(id));
+//     await deleteReview.execute(Number(id));
 
-    return response.sendStatus(204);
-  }
-}
+//     return response.sendStatus(204);
+//   }
+// }
 
-export default new FriendlyPostsController();
+export default FriendlyPostsController;

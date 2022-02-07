@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import WorksController from '../controllers/WorksController';
+import PostController from '../controllers/PostController';
+// import WorksController from '../controllers/WorksController';
 
-const worksController = new WorksController();
+const worksController = new PostController();
 
 const WorkRoutes = Router();
 
@@ -9,8 +10,8 @@ WorkRoutes.route('/')
   .get(worksController.index)
   .post(worksController.create);
 
-WorkRoutes.route('/:id')
-  .get(worksController.show)
-  .put(worksController.update);
+// WorkRoutes.route('/:id')
+//   .get(worksController.show)
+//   .put(worksController.update);
 
 export default WorkRoutes;
