@@ -1,17 +1,20 @@
 import { getRepository, Repository } from "typeorm";
 import { UserDAO } from "friend_of_all/DAO";
 import { User } from "friend_of_all/domain";
-import { IUser, UserEntity } from "../../../models/UserModel";
+// import { IUser, UserEntity } from "../../../models/UserModel";
+import UserCustom from "../models/UserCustom";
 
 class UserTypeOrmDAO implements UserDAO {
-  private ormRepository: Repository<IUser>;
+  private ormRepository: Repository<UserCustom>;
 
   constructor () {
-    this.ormRepository = getRepository<IUser>(UserEntity);
+    this.ormRepository = getRepository<UserCustom>(UserCustom);
   }
   
   async create(user: User): Promise<User> {
     const { name, email, password } = user;
+
+    console.log("fwefw")
 
     let userTypeOrm = this.ormRepository.create({
       name,
@@ -45,10 +48,12 @@ class UserTypeOrmDAO implements UserDAO {
     return user;
   }
 
-  async getByEmail(email: String): Promise<User | undefined> {
+  async getByEmail(email: string): Promise<User | undefined> {
     const userTypeOrm = await this.ormRepository.findOne({
       where: { email }
     });
+
+    console.log("sim")
 
     if (!userTypeOrm) {
       return undefined;

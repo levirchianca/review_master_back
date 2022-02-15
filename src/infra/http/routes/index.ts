@@ -2,12 +2,13 @@ import { Router } from 'express';
 import ReviewRoutes from './reviews.routes';
 import UserRoutes from './users.routes';
 import WorkRoutes from './works.routes';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const router = Router();
 
-router.use("/reviews", ReviewRoutes);
+router.use("/reviews", ensureAuthenticated, ReviewRoutes);
 
-router.use("/works", WorkRoutes);
+router.use("/works", ensureAuthenticated, WorkRoutes);
 
 router.use("/users", UserRoutes);
 

@@ -34,6 +34,16 @@ class FriendlyPostsController {
     return res.json(post);
   }
 
+  async show(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const postController = new PostControllerImpl(new PostDAOImpl());
+
+    const post = await postController.getPost(id);
+
+    return res.json(post);
+  }
+
   public async create(req: Request, res: Response): Promise<Response> {
     const { title, description } = req.body;
 

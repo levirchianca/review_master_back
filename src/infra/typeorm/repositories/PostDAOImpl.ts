@@ -1,13 +1,14 @@
 import { PostDAO } from "friend_of_all/DAO";
 import { getRepository, ILike, Repository } from "typeorm";
 import { Post } from "friend_of_all/domain";
-import { IWork, WorkSchema } from "../../../models/WorkModel";
+// import { IWork, WorkSchema } from "../../../models/WorkModel";
+import Work from "../models/Work";
 
 class PostDAOImpl implements PostDAO {
   private ormRepository: Repository<Post>;
 
   constructor() {
-    this.ormRepository = getRepository<Post>(WorkSchema);
+    this.ormRepository = getRepository<Post>(Work);
   }
 
   public async create(post: Post): Promise<Post> {
@@ -32,6 +33,12 @@ class PostDAOImpl implements PostDAO {
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  public async getById(id: string): Promise<Post | undefined> {
+    return await this.ormRepository.findOne({
+      where: { id }
+    });
   }
 }
 

@@ -1,6 +1,6 @@
 import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
-export class CreateReview1637885102645 implements MigrationInterface {
+export class CreateReview1644885986423 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.createTable(new Table(
@@ -32,8 +32,8 @@ export class CreateReview1637885102645 implements MigrationInterface {
               type: 'text'
             },
             {
-              name: 'author',
-              type: 'varchar'
+              name: 'author_id',
+              type: 'number'
             },
             {
               name: 'work_id',
@@ -46,6 +46,14 @@ export class CreateReview1637885102645 implements MigrationInterface {
               columnNames: ['work_id'],
               referencedColumnNames: ['id'],
               referencedTableName: 'works',
+              onDelete: 'SET NULL',
+              onUpdate: 'CASCADE'
+            },
+            {
+              name: 'ReviewUser',
+              columnNames: ['author_id'],
+              referencedColumnNames: ['id'],
+              referencedTableName: 'users',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE'
             }

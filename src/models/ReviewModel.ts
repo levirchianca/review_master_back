@@ -11,30 +11,52 @@ export class IReview extends Interaction {
 }
 
 
-export const ReviewSchema = new EntitySchema({
+export const ReviewSchema = new EntitySchema<IReview>({
   name: 'reviews',
-  columns: {
-    id: {
+  columns: [
+    {
+      name: 'id',
       type: 'integer',
       generated: 'increment',
       primary: true,
     },
-    title: {
+    {
+      name: 'title',
       type: 'varchar'
     },
-    description: {
+    {
+      name: 'description',
       type: 'varchar'
     },
-    note: {
+    {
+      name: 'note',
       type: 'tinyint'
     },
-    user: {
+    {
+      name: 'user_id',
       type: 'integer'
     },
-    work: {
+    {
+      name: 'work_id',
       type: 'integer'
     }
-  }
+  ],
+  relations: [
+    {
+      type: 'many-to-one',
+      target: 'users',
+      joinColumn: {
+        name: 'user_id'
+      }
+    },
+    {
+      type: 'many-to-one',
+      target: 'works',
+      joinColumn: {
+        name: 'work_id'
+      }
+    }
+  ]
 });
 
 export default ReviewSchema;

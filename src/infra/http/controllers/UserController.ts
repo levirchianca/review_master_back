@@ -21,6 +21,7 @@ class UsersController {
   // }
 
   public async create(req: Request, res: Response): Promise<Response> {
+
     const user = new User(req.body.email, req.body.password, req.body.name);
 
     const userController = new UserController(new UserTypeOrmDAO());

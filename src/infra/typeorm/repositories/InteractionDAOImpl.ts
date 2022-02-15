@@ -1,29 +1,75 @@
 import { InteractionDAO } from "friend_of_all/DAO";
-import Review from "src/models/Review";
-import { Interaction } from "friend_of_all/domain";
+// import Review from "src/models/Review";
+import { Interaction, User, Post } from "friend_of_all/domain";
+import InterationImpl from "src/models/InteractionImpl";
 import { Repository, getRepository } from "typeorm";
-import { IReview, ReviewSchema } from "src/models/ReviewModel";
+// import { IReview } from "src/models/ReviewModel";
+import Review from "../models/Review";
 
 class InteractionDAOImpl implements InteractionDAO {
-  private ormRepository: Repository<IReview>;
+  private ormRepository: Repository<Review>;
 
   constructor() {
-    this.ormRepository = getRepository<IReview>(ReviewSchema);
+    this.ormRepository = getRepository<Review>(Review);
   }
 
-  create(review: IReview): Promise<Interaction> {
-    const interactionToCreate = this.ormRepository.create(review);
+  async create(data: InterationImpl): Promise<Interaction> {
+    // const interactionToCreate = this.ormRepository.create(review);
 
-    return this.ormRepository.save(interactionToCreate);
+    const interactionToCreate = this.ormRepository.create({
+      author_id: parseInt(data.user.id),
+      work_id: parseInt(data.post.id),
+      ...data
+    });
+
+    const createdCustomInteraction = await this.ormRepository.save(interactionToCreate);
+
+    const review = new InterationImpl(
+      data.post,
+      data.user,
+      createdCustomInteraction.note,
+      createdCustomInteraction.title,
+      createdCustomInteraction.description,
+      String(createdCustomInteraction.id)
+    );
+
+    return review;
   }
 
-  listByPost(postId: string): Promise<Interaction[]> {
+  async listByPost(postId: string): Promise<Interaction[]> {
     try {
       // TODO: verificar com Levir
-      return this.ormRepository.find({
-        where: postId,
-        relations: ["user"],
+      const customInteractions = await this.ormRepository.find({
+        where: {
+          work_id: postId
+        },
+        relations: ["author", "work"],
       });
+
+      return customInteractions.map(interaction => {
+        const user = new User(
+          interaction.author.email,
+          interaction.author.password,
+          interaction.author.name,
+          String(interaction.author.id)
+        );
+
+        const work = new Post(
+          interaction.work.title,
+          interaction.work.description,
+          String(interaction.work_id)
+        );
+
+        return new InterationImpl(
+          work,
+          user,
+          interaction.note,
+          interaction.title,
+          interaction.description,
+          String(interaction.id),
+        )
+      })
+
     } catch (error) {
       throw new Error(error);
     }

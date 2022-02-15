@@ -3,13 +3,13 @@
   "database": "db.sqlite3",
   "logging": false,
   "entities": [
-     "./src/models/**/*.ts"
+     "./src/infra/typeorm/models/*.ts"
   ],
   "migrations": [
      "./src/infra/typeorm/migrations/*.ts"
   ],
   "cli": {
     "migrationsDir": "./src/infra/typeorm/migrations",
-    "entitiesDir": "./src/models"
+    "entitiesDir": "./src/infra/typeorm/models"
   }
 }
